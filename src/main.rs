@@ -47,16 +47,17 @@ fn main() {
     let mut previous_window_sum = sliding_windows.get(0).unwrap().sum();
     increased = 0;
     decreased = 0;
-    for window in sliding_windows.iter().skip(3) {
-        if window.sum() > previous_window_sum {
+
+    sliding_windows.iter().skip(3).for_each(| item | {
+        if item.sum() > previous_window_sum {
             increased += 1;
         }
-        if window.sum() < previous_window_sum {
+        if item.sum() < previous_window_sum {
             decreased += 1;
         }
-        previous_window_sum = window.sum();
-        println!("{:#?}", window);
-    }
+        previous_window_sum = item.sum();
+        println!("{:#?}", item);
+    });
 
     println!("amount of times increased: {}", increased);
     println!("amount of times decreased: {}", decreased);
