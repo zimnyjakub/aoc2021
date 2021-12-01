@@ -44,12 +44,10 @@ fn main() {
         sliding_windows.push(SlidingWindow(elem0, elem1, elem2));
     }
 
-    let mut previous_window_sum = sliding_windows.remove(0).sum();
-    sliding_windows.remove(1);
-    sliding_windows.remove(1);
+    let mut previous_window_sum = sliding_windows.get(0).unwrap().sum();
     increased = 0;
     decreased = 0;
-    for window in sliding_windows {
+    for window in sliding_windows.iter().skip(3) {
         if window.sum() > previous_window_sum {
             increased += 1;
         }
