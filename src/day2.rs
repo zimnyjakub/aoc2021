@@ -54,14 +54,6 @@ impl Position {
     }
 }
 
-#[derive(Debug)]
-struct SlidingWindow(i32, i32, i32);
-
-impl SlidingWindow {
-    fn sum(&self) -> i32 {
-        self.0 + self.1 + self.2
-    }
-}
 
 #[cfg(test)]
 mod test{
