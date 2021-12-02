@@ -1,5 +1,8 @@
+mod day2;
+
 use std::fmt::{Debug, Display, Formatter};
 use std::fs;
+use crate::day2::{Pilot, Position};
 
 fn main() {
     // println!("advent of code day 1 -p1");
@@ -68,9 +71,7 @@ fn main() {
     let string = fs::read_to_string("dive.txt").unwrap();
     let mut lines = string.lines();
 
-    let commands: Vec<Pilot> = lines.map(|line| {
-        Pilot::from(line)
-    }).collect();
+    let commands: Vec<Pilot> = lines.map(Pilot::from).collect();
 
     let mut pos = Position::new();
     pos.apply(commands);
@@ -79,60 +80,4 @@ fn main() {
     println!("{:#?}", pos.aoc_solution());
 }
 
-#[derive(Debug)]
-enum Pilot {
-    Forward(i32),
-    Down(i32),
-    Up(i32),
-    Nop,
-}
 
-impl Pilot {
-    fn from(str: &str) -> Pilot {
-        let parts: Vec<&str> = str.split(' ').collect();
-        let param = parts[1].parse::<i32>().unwrap();
-        match parts[0] {
-            "forward" => Pilot::Forward(param),
-            "down" => Pilot::Down(param),
-            "up" => Pilot::Up(param),
-            &_ => Pilot::Nop
-        }
-    }
-}
-
-
-#[derive(Debug)]
-struct Position {
-    horizontal_position: i32,
-    depth: i32,
-}
-
-impl Position {
-    fn new() -> Position {
-        Position { horizontal_position: 0, depth: 0 }
-    }
-
-    fn apply(&mut self, cmds: impl IntoIterator<Item=Pilot>) {
-        for cmd in cmds {
-            match cmd {
-                Pilot::Forward(v) => {self.horizontal_position += v}
-                Pilot::Down(v) => {self.depth += v}
-                Pilot::Up(v) => {self.depth -=v}
-                _ => ()
-            }
-        }
-    }
-
-    fn aoc_solution(&self) -> i32 {
-        self.depth * self.horizontal_position
-    }
-}
-
-#[derive(Debug)]
-struct SlidingWindow(i32, i32, i32);
-
-impl SlidingWindow {
-    fn sum(&self) -> i32 {
-        self.0 + self.1 + self.2
-    }
-}
