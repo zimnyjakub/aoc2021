@@ -1,9 +1,10 @@
 mod day2;
-mod day1;
+mod day3;
 
 use std::fmt::{Debug, Display, Formatter};
 use std::fs;
 use crate::day2::{Pilot, Position};
+use crate::day3::day3;
 
 fn main() {
     let string = fs::read_to_string("depths.txt").unwrap();
@@ -59,7 +60,6 @@ fn main() {
             decreased += 1;
         }
         previous_window_sum = item.sum();
-        println!("{:#?}", item);
     });
 
     println!("amount of times increased: {}", increased);
@@ -76,6 +76,8 @@ fn main() {
     pos.apply(commands);
 
     println!("solution for day2:{:#?}", pos.aoc_solution());
+
+    day3();
 }
 
 #[derive(Debug)]
