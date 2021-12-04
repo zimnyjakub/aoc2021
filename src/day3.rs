@@ -9,7 +9,7 @@ pub fn day3() {
     let mut lines = string.lines();
 
     let mut data: Vec<isize> = Vec::new();
-    let data_len = 11;
+    let data_len = 12;
     for line in lines {
         let intval = isize::from_str_radix(line, 2).unwrap();
         data.push(intval);
@@ -21,6 +21,7 @@ pub fn day3() {
     // }
 
     let mut most_common_mask = 0;
+    let mut least_common_mask = 0;
     for n in 0..data_len {
         let mut c = 0;
         for row in &data {
@@ -34,9 +35,13 @@ pub fn day3() {
         println!("pos: {} -> {}", n, most_common);
         most_common_mask = most_common_mask | ((1 & most_common) << n);
         most_common_mask.reverse_bits();
+        least_common_mask = least_common_mask | ((1 ^ most_common) << n);
+        least_common_mask.reverse_bits();
     }
 
-    println!("gamma: {}, {:b}", most_common_mask, most_common_mask)
+    println!("gamma: {}, {:016b}", most_common_mask, most_common_mask);
+    println!("epsilon: {}, {:016b}", least_common_mask, least_common_mask);
+    println!("aoc solution for day 3 part 1 {}", most_common_mask * least_common_mask);
 }
 
 
