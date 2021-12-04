@@ -20,28 +20,42 @@ pub fn day3() {
     //     println!("{:#016b}", row);
     // }
 
-    let mut most_common_mask = 0;
-    let mut least_common_mask = 0;
+    let mut gamma = 0;
+    let mut epsilon = 0;
     for n in 0..data_len {
         let mut c = 0;
         for row in &data {
             match row >> n & 1 {
-                1 => c +=1,
-                0 => c -=1,
+                1 => c += 1,
+                0 => c -= 1,
                 _ => ()
             }
         }
         let most_common: i32 = if c >= 0 { 1 } else { 0 };
         println!("pos: {} -> {}", n, most_common);
-        most_common_mask = most_common_mask | ((1 & most_common) << n);
-        most_common_mask.reverse_bits();
-        least_common_mask = least_common_mask | ((1 ^ most_common) << n);
-        least_common_mask.reverse_bits();
+        gamma = gamma | ((1 & most_common) << n);
+        gamma.reverse_bits();
+        epsilon = epsilon | ((1 ^ most_common) << n);
+        epsilon.reverse_bits();
     }
 
-    println!("gamma: {}, {:016b}", most_common_mask, most_common_mask);
-    println!("epsilon: {}, {:016b}", least_common_mask, least_common_mask);
-    println!("aoc solution for day 3 part 1 {}", most_common_mask * least_common_mask);
+    println!("gamma: {}, {:012b}", gamma, gamma);
+    println!("epsilon: {}, {:012b}", epsilon, epsilon);
+    println!("aoc solution for day 3 part 1 {}", gamma * epsilon);
+
+    let mut oxygen_gen_rating = 0;
+    let mut co2_scrubber_rating = 0;
+    for row in &data {
+        if gamma & *row as i32 == 1 {
+            oxygen_gen_rating= row.clone();
+        }
+
+        if epsilon & *row as i32 == 1 {
+            co2_scrubber_rating = row.clone();
+        }
+    }
+    println!("oxygen generator rating: {} ({:012b})", oxygen_gen_rating, oxygen_gen_rating);
+    println!("co2 scrubber rating: {} ({:012b})", co2_scrubber_rating, co2_scrubber_rating)
 }
 
 
