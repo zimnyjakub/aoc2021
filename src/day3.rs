@@ -8,87 +8,35 @@ pub fn day3() {
     let string = fs::read_to_string("bleepbloop.txt").unwrap();
     let mut lines = string.lines();
 
-    let mut data: Vec<Vec<bool>> = Vec::new();
+    let mut data: Vec<isize> = Vec::new();
+    let data_len = 11;
     for line in lines {
-        let mut row: Vec<bool> = Vec::new();
-        for c in line.chars() {
-            match c {
-                '1' => row.push(true),
-                '0' => row.push(false),
+        let intval = isize::from_str_radix(line, 2).unwrap();
+        data.push(intval);
+    }
+
+    //
+    // for row in &data {
+    //     println!("{:#016b}", row);
+    // }
+
+    let mut most_common_mask = 0;
+    for n in 0..data_len {
+        let mut c = 0;
+        for row in &data {
+            match row >> n & 1 {
+                1 => c +=1,
+                0 => c -=1,
                 _ => ()
             }
         }
-        data.push(row);
+        let most_common: i32 = if c >= 0 { 1 } else { 0 };
+        println!("pos: {} -> {}", n, most_common);
+        most_common_mask = most_common_mask | ((1 & most_common) << n);
+        most_common_mask.reverse_bits();
     }
 
-    let mut diag = BinaryDiagnostic::new(data);
-    diag.compute_epsilon();
-    diag.compute_gamma_from_epsilon();
-
-    println!("{}", diag)
-}
-
-#[derive(Debug)]
-struct BinaryDiagnostic {
-    gamma: Vec<bool>,
-    epsilon: Vec<bool>,
-
-    input: Vec<Vec<bool>>,
-}
-
-
-impl Display for BinaryDiagnostic {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "epsilon: {} | gamma: {}", bool_vec_to_string(&self.epsilon), bool_vec_to_string(&self.gamma))
-    }
-}
-
-fn bool_vec_to_string(input: &Vec<bool>) -> String {
-    let mut s = String::with_capacity(input.len());
-    for e in input {
-        match e {
-            true => s.push('1'),
-            false => s.push('0')
-        }
-    };
-    s
-}
-
-impl BinaryDiagnostic {
-    fn new(input: Vec<Vec<bool>>) -> BinaryDiagnostic{
-        BinaryDiagnostic {
-            epsilon: Vec::new(),
-            gamma: Vec::new(),
-
-            input
-        }
-    }
-
-    fn compute_epsilon(&mut self) {
-        let len = self.input.get(0).unwrap().len();
-        for i in 0..len {
-            let mut c = 0;
-            for row in &self.input {
-                if row[i] {
-                    c +=1;
-                } else {
-                    c -=1;
-                }
-            }
-
-            if c > 0 {
-                self.epsilon.push(true);
-            } else {
-                self.epsilon.push(false);
-            }
-        }
-    }
-
-    fn compute_gamma_from_epsilon(&mut self) {
-        for eps in &self.epsilon {
-            self.gamma.push(eps.clone().not());
-        }
-    }
+    println!("gamma: {}, {:b}", most_common_mask, most_common_mask)
 }
 
 
