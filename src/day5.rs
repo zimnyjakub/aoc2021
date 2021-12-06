@@ -13,8 +13,6 @@ pub fn day5() {
     ocean_floor.compute_cloud_map();
 
     ocean_floor.print_map();
-
-
 }
 
 struct OceanFloor {
@@ -34,7 +32,7 @@ impl OceanFloor {
     fn compute_cloud_map(&mut self) {
         let extents = self.get_map_extents();
         println!("map extents: x:{}, y:{}", &extents.0, &extents.1);
-        let lines :Vec<HydrothermalVentCloud> = self.clouds
+        let lines: Vec<HydrothermalVentCloud> = self.clouds
             .iter()
             .filter(|c| c.begin.0 == c.end.0 || c.begin.1 == c.end.1)
             .cloned()
@@ -48,26 +46,26 @@ impl OceanFloor {
             self.cloud_map.push(row)
         }
 
-        for line in lines{
+        for line in lines {
             println!("{:?}", line);
             let bump_points = line.expand();
             println!("{:?}", bump_points);
             for point in bump_points {
-                self.cloud_map[point.0 as usize][point.1 as usize] +=1;
+                self.cloud_map[point.0 as usize][point.1 as usize] += 1;
             }
         }
     }
 
     fn get_map_extents(&self) -> Point {
-        let mut max_x= std::cmp::max(
+        let mut max_x = std::cmp::max(
             self.clouds.iter().map(|it| it.begin.0).max().unwrap(),
             self.clouds.iter().map(|it| it.end.0).max().unwrap(),
         );
-        let mut max_y= std::cmp::max(
+        let mut max_y = std::cmp::max(
             self.clouds.iter().map(|it| it.begin.1).max().unwrap(),
             self.clouds.iter().map(|it| it.end.1).max().unwrap(),
         );
-        Point(max_x+1, max_y+1)
+        Point(max_x + 1, max_y + 1)
     }
 
     fn print_map(&self) {
@@ -75,13 +73,13 @@ impl OceanFloor {
             for v in x {
                 print!("{:2} ", v);
             }
-            println!();
+
         }
     }
 }
 
 
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug, Clone, Copy)]
 struct HydrothermalVentCloud {
     begin: Point,
     end: Point,
@@ -90,20 +88,23 @@ struct HydrothermalVentCloud {
 impl HydrothermalVentCloud {
     fn expand(&self) -> Vec<Point> {
         let mut points = Vec::new();
-        // let x = std::cmp::max(self.end.0, self.begin.0) - std::cmp::min(self.end.0, self.begin.0);
-        // let y = std::cmp::max(self.end.1, self.begin.1) - std::cmp::min(self.end.1, self.begin.1);
-        for i in self.begin.0..self.end.0+1{
-            points.push(Point(i, self.begin.1));
+
+        if self.end.1 == self.begin.1 {
+            for i in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.0, self.begin.0)+1 {
+                points.push(Point(i, self.end.1));
+            }
         }
-        for i in self.begin.1..self.end.1 {
-            points.push(Point( self.begin.0, i));
+        if self.end.0 == self.begin.0 {
+            for i in std::cmp::min(self.end.1, self.begin.1)..std::cmp::max(self.end.1, self.begin.1)+1 {
+                points.push(Point(self.begin.0, i));
+            }
         }
 
         points
     }
 }
 
-#[derive(Debug,Clone,Copy)]
+#[derive(Debug, Clone, Copy)]
 struct Point(i32, i32);
 
 impl From<String> for HydrothermalVentCloud {
