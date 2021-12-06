@@ -12,7 +12,7 @@ pub fn day5() {
 
     ocean_floor.compute_cloud_map();
 
-    ocean_floor.print_map();
+    // ocean_floor.print_map();
     println!("aoc answer is: {}", ocean_floor.get_aoc2021_answer());
 }
 
@@ -33,21 +33,16 @@ impl OceanFloor {
     fn compute_cloud_map(&mut self) {
         let extents = self.get_map_extents();
         println!("map extents: x:{}, y:{}", &extents.0, &extents.1);
-        let lines: Vec<HydrothermalVentCloud> = self.clouds
-            .iter()
-            .filter(|c| c.begin.0 == c.end.0 || c.begin.1 == c.end.1)
-            .cloned()
-            .collect();
 
-        for _ in 0..extents.0 {
+        for _ in 0..extents.0 + 10 {
             let mut row = Vec::new();
-            for _ in 0..extents.1 {
+            for _ in 0..extents.1 + 10 {
                 row.push(0)
             }
             self.cloud_map.push(row)
         }
 
-        for line in lines {
+        for line in &self.clouds {
             println!("{:?}", line);
             let bump_points = line.expand();
             println!("{:?}", bump_points);
@@ -79,7 +74,6 @@ impl OceanFloor {
                 print!("{:2} ", v);
             }
             println!();
-
         }
     }
 }
@@ -96,13 +90,22 @@ impl HydrothermalVentCloud {
         let mut points = Vec::new();
 
         if self.end.0 == self.begin.0 {
-            for i in std::cmp::min(self.end.1, self.begin.1)..std::cmp::max(self.end.1, self.begin.1)+1 {
+            for i in std::cmp::min(self.end.1, self.begin.1)..std::cmp::max(self.end.1, self.begin.1) + 1 {
                 points.push(Point(i, self.end.0));
             }
         }
         if self.end.1 == self.begin.1 {
-            for i in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.0, self.begin.0)+1 {
+            for i in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.0, self.begin.0) + 1 {
                 points.push(Point(self.begin.1, i));
+            }
+        }
+
+        if std::cmp::max(self.end.1, self.begin.1) - std::cmp::min(self.end.1, self.begin.1) ==
+            std::cmp::max(self.end.0, self.begin.0) - std::cmp::min(self.end.0, self.begin.0) {
+            for x in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.1, self.begin.1) + 1 {
+                for y in std::cmp::min(self.end.1, self.begin.1)..std::cmp::max(self.end.0, self.begin.0) + 1 {
+                    points.push(Point(x,y));
+                }
             }
         }
 
