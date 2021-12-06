@@ -13,6 +13,7 @@ pub fn day5() {
     ocean_floor.compute_cloud_map();
 
     ocean_floor.print_map();
+    println!("aoc answer is: {}", ocean_floor.get_aoc2021_answer());
 }
 
 struct OceanFloor {
@@ -56,6 +57,10 @@ impl OceanFloor {
         }
     }
 
+    fn get_aoc2021_answer(&self) -> usize {
+        self.cloud_map.iter().flat_map(|f| f.iter().filter(|it| it.ge(&&2))).cloned().collect::<Vec<i32>>().len()
+    }
+
     fn get_map_extents(&self) -> Point {
         let mut max_x = std::cmp::max(
             self.clouds.iter().map(|it| it.begin.0).max().unwrap(),
@@ -73,6 +78,7 @@ impl OceanFloor {
             for v in x {
                 print!("{:2} ", v);
             }
+            println!();
 
         }
     }
@@ -89,14 +95,14 @@ impl HydrothermalVentCloud {
     fn expand(&self) -> Vec<Point> {
         let mut points = Vec::new();
 
-        if self.end.1 == self.begin.1 {
-            for i in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.0, self.begin.0)+1 {
-                points.push(Point(i, self.end.1));
-            }
-        }
         if self.end.0 == self.begin.0 {
             for i in std::cmp::min(self.end.1, self.begin.1)..std::cmp::max(self.end.1, self.begin.1)+1 {
-                points.push(Point(self.begin.0, i));
+                points.push(Point(i, self.end.0));
+            }
+        }
+        if self.end.1 == self.begin.1 {
+            for i in std::cmp::min(self.end.0, self.begin.0)..std::cmp::max(self.end.0, self.begin.0)+1 {
+                points.push(Point(self.begin.1, i));
             }
         }
 
