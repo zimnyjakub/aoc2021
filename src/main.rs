@@ -6,6 +6,7 @@ mod day6;
 mod day7;
 mod day8;
 mod day9;
+mod day10;
 
 use std::fmt::{Debug, Display, Formatter};
 use std::fs;
@@ -17,6 +18,7 @@ use crate::day6::day6;
 use crate::day7::{day7};
 use crate::day8::{day8};
 use crate::day9::{day9,day9_p2};
+use crate::day10::{day10};
 
 fn main() {
     let string = fs::read_to_string("depths.txt").unwrap();
@@ -96,7 +98,8 @@ fn main() {
     // day7();
     // day8();
     // day9();
-    day9_p2();
+    // day9_p2();
+    day10();
 }
 
 

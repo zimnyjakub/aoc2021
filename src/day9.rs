@@ -121,15 +121,15 @@ fn basin_points(low_point: (i32, i32), height_map: &BTreeMap<(i32, i32), i32>) -
         pts.insert((low_point.0 - 1, low_point.1), *left.unwrap());
     }
 
-    let mut r = Vec::new();
-    for p in pts {
-        let rr = basin_points(p.0, &height_map);
-        r.push(rr);
-    }
+    // let mut r = Vec::new();
+    // for p in pts {
+    //     let rr = basin_points(p.0, &height_map);
+    //     r.push(rr);
+    // }
 
-    for p in &r {
-        pts.extend(p);
-    }
+    // for p in &r {
+    //     pts.extend(p);
+    // }
 
     pts
 }
